@@ -1,9 +1,11 @@
 import urllib.request
+import urllib.parse
 import json
 import db
 import hashlib
 
-search_keys = ["touran","xc90"]
+
+search_keys = ["touran","xc90","alhambra","ford s-max", "ford galaxy"]
 price_from = 80000
 price_to = 250000
 
@@ -17,10 +19,11 @@ database.createTable("advertisement", column_list)
 
 for search_phrase in search_keys:
     url = "https://www.sbazar.cz/api/v1/items/search?price_from=" + str(price_from) + "&price_to=" + str(
-        price_to) + "&category_id=170&phrase=" + search_phrase + "&hide_price_by_agreement=true&limit=2000"
+        price_to) + "&category_id=170&phrase=" + urllib.parse.quote(search_phrase) + "&hide_price_by_agreement=true&limit=200"
+    print(url)
     search_result = urllib.request.urlopen(url).read().decode('utf-8')
     search_result_json = json.loads(search_result)
-    sorted_array = sorted(search_result_json["results"], key=lambda k: (k["price"],k["create_date"],))
+    sorted_array = sorted(search_result_json["results"], key=lambda k: (k["create_date"],k["price"]))
 
     for advertisement in sorted_array:
         url = "https://www.sbazar.cz/"+ advertisement["user"]["user_service"]["shop_url"] + "/detail/" + advertisement["seo_name"]

@@ -30,7 +30,6 @@ class Database:
         self.cursor.execute(query)
         query_result = self.cursor.fetchall()
         if not query_result:
-            print("Inserting new:", data)
             query = 'INSERT INTO %s (%s) VALUES (%s)' % (table_name, columns, placeholders)
             self.cursor.execute(query, data)
             self.db_conn.commit()
