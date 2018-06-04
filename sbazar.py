@@ -5,6 +5,8 @@ import db
 import hashlib
 
 
+
+
 search_keys = ["touran","xc90","alhambra","ford s-max", "ford galaxy"]
 price_from = 80000
 price_to = 250000
