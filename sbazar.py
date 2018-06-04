@@ -5,8 +5,6 @@ import db
 import hashlib
 import seznamclient
 
-
-
 search_keys = ["touran","xc90","alhambra","ford s-max", "ford galaxy"]
 price_from = 80000
 price_to = 250000
@@ -15,7 +13,6 @@ advert_record = {"id": "" ,"type": "","create_date": "" ,"price": "","name":"","
 
 database = db.Database("sbazar-auto.sql")
 column_list = ','.join(advert_record.keys())
-print(column_list)
 database.createTable("advertisement", column_list)
 
 message = """
@@ -23,12 +20,10 @@ New records:"
 
 """
 
-
 for search_phrase in search_keys:
     message = message + "\n" + search_phrase + "\n"
     url = "https://www.sbazar.cz/api/v1/items/search?price_from=" + str(price_from) + "&price_to=" + str(
         price_to) + "&category_id=170&phrase=" + urllib.parse.quote(search_phrase) + "&hide_price_by_agreement=true&limit=200"
-    print(url)
     search_result = urllib.request.urlopen(url).read().decode('utf-8')
     search_result_json = json.loads(search_result)
     sorted_array = sorted(search_result_json["results"], key=lambda k: (k["create_date"],k["price"]))
