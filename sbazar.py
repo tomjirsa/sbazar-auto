@@ -3,7 +3,7 @@ import urllib.parse
 import json
 import db
 import hashlib
-
+import seznamclient
 
 
 
@@ -18,8 +18,14 @@ column_list = ','.join(advert_record.keys())
 print(column_list)
 database.createTable("advertisement", column_list)
 
+message = """
+New records:"
+
+"""
+
 
 for search_phrase in search_keys:
+    message = message + "\n" + search_phrase + "\n"
     url = "https://www.sbazar.cz/api/v1/items/search?price_from=" + str(price_from) + "&price_to=" + str(
         price_to) + "&category_id=170&phrase=" + urllib.parse.quote(search_phrase) + "&hide_price_by_agreement=true&limit=200"
     print(url)
@@ -41,11 +47,21 @@ for search_phrase in search_keys:
         advert_record["name"] = advertisement["name"]
         advert_record["url_advert"] = url
         advert_record["url_image"] = url_image
-        database.insertRecord("advertisement", advert_record)
-        print(advertisement["create_date"],advertisement["price"], advertisement["name"], url, url_image)
+        (code, data) = database.insertRecord("advertisement", advert_record)
+        if code:
+            message = message + str(data["price"]) + "\t\t" + data["name"] + "\t\t url: " + data["url_advert"] + "\n"
+
 
 
 table = database.getAllData("advertisement")
+table = database.getDataNDaysBack("advertisement", 7)
+
 database.closeConnection()
 
-print(table)
+print(message)
+
+email = seznamclient.Seznam_email()
+email.getCredentials()
+email.connect()
+email.sendEmail(message,"a@a.gmail.com")
+email.disconnect()
