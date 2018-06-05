@@ -5,7 +5,7 @@ import db
 import hashlib
 import seznamclient
 
-search_keys = ["touran","xc90","alhambra","ford s-max", "ford galaxy"]
+search_keys = ["Touran","Volvo XC90","Seat Alhambra","Ford S-max", "Ford Galaxy", "BMW X5", "Peugot 5008"]
 price_from = 80000
 price_to = 250000
 
@@ -16,7 +16,7 @@ column_list = ','.join(advert_record.keys())
 database.createTable("advertisement", column_list)
 
 message = """
-New records:"
+New records:
 
 """
 
@@ -44,7 +44,8 @@ for search_phrase in search_keys:
         advert_record["url_image"] = url_image
         (code, data) = database.insertRecord("advertisement", advert_record)
         if code:
-            message = message + str(data["price"]) + "\t\t" + data["name"] + "\t\t url: " + data["url_advert"] + "\n"
+            message = message + str(data["price"]) + "\t" + data["create_date"] + "\t" + data["name"] + "\t" + data["url_advert"] + "\n"
+            print(data)
 
 
 
@@ -58,5 +59,5 @@ print(message)
 email = seznamclient.Seznam_email()
 email.getCredentials()
 email.connect()
-email.sendEmail(message,"a@a.gmail.com")
+email.sendEmail(message,"a@gmail.com")
 email.disconnect()
