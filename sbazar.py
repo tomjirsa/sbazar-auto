@@ -34,11 +34,16 @@ for search_phrase in config["search_keys"]:
 
 
 
-table = database.getAllData("advertisement")
-table = database.getDataNDaysBack("advertisement", 7)
+table = database.getNewData("advertisement")
+
+print(table)
+
+for record in table:
+    print(record)
+
 
 database.closeConnection()
 
-print(message)
+#print(message)
 
-seznamclient.send_email_with_records(message,"a@a.com")
+#seznamclient.send_email_with_records(message,"a@a.com")

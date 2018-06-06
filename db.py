@@ -11,8 +11,8 @@ class Database:
                  "price": "",
                  "name": "",
                  "url_advert": "",
-                 "url_image": ""
-                 }
+                 "url_image": "",
+                 "new": ""}
 
 
     def createTable(self, table_name):
@@ -24,6 +24,7 @@ class Database:
         """
         column_list = ','.join(self.advert_record.keys())
         column_list = column_list.replace("create_date", "create_date datetime")
+        column_list = column_list.replace("edit_date", "edit_date datetime")
         query = "CREATE TABLE IF NOT EXISTS "+ table_name + " (" + column_list + ")"
         self.cursor.execute(query)
 
@@ -47,6 +48,9 @@ class Database:
             self.db_conn.commit()
             return (True, data)
         else:
+            query = "UPDATE %s SET new='FALSE' WHERE id=%s" % (table_name,data["id"])
+            self.cursor.execute(query)
+            self.db_conn.commit()
             return (False, "")
 
     def create_db_record(self, advertisement, search_phrase):
@@ -65,6 +69,7 @@ class Database:
         self.advert_record["name"] = advertisement["name"]
         self.advert_record["url_advert"] = url
         self.advert_record["url_image"] = url_image
+        self.advert_record["new"] = "True"
         return self.advert_record
 
     def getAllData(self, table_name):
@@ -79,6 +84,20 @@ class Database:
         for record in query_result:
             result.append(record)
         return result
+
+    def getNewData(self, table_name):
+        """
+
+        :param table_name: name of the table
+        :return:
+        """
+        query = "SELECT * FROM %s WHERE new LIKE 'TRUE'" % (table_name)
+        query_result = self.cursor.execute(query)
+        result = []
+        for record in query_result:
+            result.append(record)
+        return result
+
 
     def getDataNDaysBack(self, table_name, number_of_days):
         """
