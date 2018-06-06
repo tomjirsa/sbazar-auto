@@ -5,7 +5,7 @@ import db
 import hashlib
 import seznamclient
 
-search_keys = ["Touran","Volvo XC90","Seat Alhambra","Ford S-max", "Ford Galaxy", "BMW X5", "Peugot 5008"]
+search_keys = ["Touran","Volvo XC90","Seat Alhambra","Ford S-max", "Ford Galaxy", "Peugot 5008"]
 price_from = 80000
 price_to = 250000
 

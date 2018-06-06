@@ -14,7 +14,6 @@ class Database:
         :param column_list: list of columns
         :return:
         """
-        print(column_list)
         column_list = column_list.replace("create_date", "create_date datetime")
         query = "CREATE TABLE IF NOT EXISTS "+ table_name + " (" + column_list + ")"
         self.cursor.execute(query)
