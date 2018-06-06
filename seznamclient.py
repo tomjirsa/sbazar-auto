@@ -7,6 +7,7 @@ class Seznam_email:
         self.passwd = ""
         self.connection = ""
 
+
     def getCredentials(self):
         self.login = input("Your Login: ")
         self.passwd = input("Passwond: ")
@@ -28,3 +29,13 @@ class Seznam_email:
 
     def disconnect(self):
         self.connection.quit()
+
+def send_email_with_records(message, recepient):
+    try:
+        email = Seznam_email()
+        email.getCredentials()
+        email.connect()
+        email.sendEmail(message, recepient)
+        email.disconnect()
+    except:
+        print("Email sending failed")

@@ -1,19 +1,28 @@
 import sqlite3
-import datetime
 
 class Database:
     def __init__(self, database):
         self.db_conn = sqlite3.connect(database)
         self.cursor = self.db_conn.cursor()
+        self.advert_record = {"id": "",
+                 "type": "",
+                 "create_date": "",
+                 "edit_date": "",
+                 "price": "",
+                 "name": "",
+                 "url_advert": "",
+                 "url_image": ""
+                 }
 
 
-    def createTable(self, table_name, column_list):
+    def createTable(self, table_name):
         """
         Create database table
         :param table_name: name of the table
         :param column_list: list of columns
         :return:
         """
+        column_list = ','.join(self.advert_record.keys())
         column_list = column_list.replace("create_date", "create_date datetime")
         query = "CREATE TABLE IF NOT EXISTS "+ table_name + " (" + column_list + ")"
         self.cursor.execute(query)
@@ -40,6 +49,23 @@ class Database:
         else:
             return (False, "")
 
+    def create_db_record(self, advertisement, search_phrase):
+
+        url = "https://www.sbazar.cz/"+ advertisement["user"]["user_service"]["shop_url"] + "/detail/" + advertisement["seo_name"]
+        if len( advertisement["images"]) > 0 :
+            url_image = "https:" + advertisement["images"][0]["url"] + "?fl=exf|crr,1.33333,2|res,800,600,1|wrm,/watermark/sbazar.png,10,10|jpg,80,,1"
+        else:
+            url_image = "N/A"
+
+        self.advert_record["id"] = advertisement["id"]
+        self.advert_record["type"] = search_phrase
+        self.advert_record["create_date"] = advertisement["create_date"]
+        self.advert_record["edit_date"] = advertisement["edit_date"]
+        self.advert_record["price"] = advertisement["price"]
+        self.advert_record["name"] = advertisement["name"]
+        self.advert_record["url_advert"] = url
+        self.advert_record["url_image"] = url_image
+        return self.advert_record
 
     def getAllData(self, table_name):
         """
@@ -70,3 +96,4 @@ class Database:
 
     def closeConnection(self):
         self.db_conn.close()
+
