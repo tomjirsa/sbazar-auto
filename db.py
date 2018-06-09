@@ -80,9 +80,7 @@ class Database:
         """
         query = 'SELECT * FROM %s' % (table_name)
         query_result = self.cursor.execute(query)
-        result = []
-        for record in query_result:
-            result.append(record)
+        result = [dict(zip([key[0] for key in self.cursor.description], row)) for row in query_result]
         return result
 
     def getNewData(self, table_name):
@@ -93,9 +91,7 @@ class Database:
         """
         query = "SELECT * FROM %s WHERE new LIKE 'TRUE'" % (table_name)
         query_result = self.cursor.execute(query)
-        result = []
-        for record in query_result:
-            result.append(record)
+        result = [dict(zip([key[0] for key in self.cursor.description], row)) for row in query_result]
         return result
 
 
@@ -108,9 +104,7 @@ class Database:
         """
         query = "SELECT * FROM %s WHERE 'create_date' > date('now', '%s days')" % (table_name,str(number_of_days))
         query_result = self.cursor.execute(query)
-        result = []
-        for record in query_result:
-            result.append(dict(zip([key[0] for key in self.cursor.description], record)))
+        result = [dict(zip([key[0] for key in self.cursor.description], row)) for row in query_result]
         return result
 
     def closeConnection(self):
